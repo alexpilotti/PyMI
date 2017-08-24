@@ -20,8 +20,8 @@ PyObject* MiError_Init(void)
 
     for (int i = 0; i < sizeof(MI::MI_RESULT_STRINGS) / sizeof(MI::MI_RESULT_STRINGS[0]); i++)
     {
-        PyObject* err_str = PyUnicode_FromWideChar(MI::MI_RESULT_STRINGS[i],
-                                                   wcslen(MI::MI_RESULT_STRINGS[i]));
+        PyObject* err_str = PyUnicode_FromStringAndSize(MI::MI_RESULT_STRINGS[i],
+                                                        strlen(MI::MI_RESULT_STRINGS[i]));
         PyObject* err_code = PyLong_FromLong(i);
         PyObject_SetAttr(m, err_str, err_code);
     }

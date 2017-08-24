@@ -62,15 +62,15 @@ static PyObject* Serializer_SerializeInstance(Serializer* self, PyObject* args, 
     try
     {
         if (!PyObject_IsInstance(instance, reinterpret_cast<PyObject*>(&InstanceType)))
-            throw MI::TypeConversionException(L"\"instance\" must have type Instance");
+            throw MI::TypeConversionException("\"instance\" must have type Instance");
 
         bool includeClass = includeClassObj && PyObject_IsTrue(includeClassObj);
 
-        std::wstring data;
+        std::string data;
         AllowThreads(&self->cs, [&]() {
             data = self->serializer->SerializeInstance(*((Instance*)instance)->instance, includeClass);
         });
-        return PyUnicode_FromWideChar(data.c_str(), data.length());
+        return PyUnicode_FromStringAndSize(data.c_str(), data.length());
     }
     catch (std::exception& ex)
     {
@@ -90,15 +90,15 @@ static PyObject* Serializer_SerializeClass(Serializer* self, PyObject* args, PyO
     try
     {
         if (!PyObject_IsInstance(miClass, reinterpret_cast<PyObject*>(&ClassType)))
-            throw MI::TypeConversionException(L"\"mi_class\" must have type Class");
+            throw MI::TypeConversionException("\"mi_class\" must have type Class");
 
         bool deep = deepObj && PyObject_IsTrue(deepObj);
 
-        std::wstring data;
+        std::string data;
         AllowThreads(&self->cs, [&]() {
             data = self->serializer->SerializeClass(*((Class*)miClass)->miClass, deep);
         });
-        return PyUnicode_FromWideChar(data.c_str(), data.length());
+        return PyUnicode_FromStringAndSize(data.c_str(), data.length());
     }
     catch (std::exception& ex)
     {

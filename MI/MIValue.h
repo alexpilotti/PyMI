@@ -17,7 +17,7 @@ namespace MI
         void Delete(MI_Value& value, MI_Type type);
         void SetNullValue();
         void CopyString(const std::string& value);
-        void CopyWString(const std::wstring& value);
+        //void CopyWString(const std::wstring& value);
 
         friend Instance;
         friend OperationOptions;
@@ -36,7 +36,7 @@ namespace MI
         static std::shared_ptr<MIValue> FromReal32(MI_Real32 value);
         static std::shared_ptr<MIValue> FromReal64(MI_Real64 value);
         static std::shared_ptr<MIValue> FromString(const std::string& value);
-        static std::shared_ptr<MIValue> FromString(const std::wstring& value);
+        //static std::shared_ptr<MIValue> FromString(const std::wstring& value);
         static std::shared_ptr<MIValue> FromInstance(MI::Instance& value);
         static std::shared_ptr<MIValue> FromReference(MI::Instance& value);
         static std::shared_ptr<MIValue> CreateArray(MI_Uint32 arraySize, MI_Type type);

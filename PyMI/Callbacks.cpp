@@ -16,8 +16,8 @@ bool PythonMICallbacks::WriteError(std::shared_ptr<MI::Operation> operation, std
 }
 
 void PythonMICallbacks::IndicationResult(std::shared_ptr<MI::Operation> operation, std::shared_ptr<const MI::Instance> instance,
-    const std::wstring& bookmark, const std::wstring& machineID, bool moreResults, MI_Result resultCode,
-    const std::wstring& errorString, std::shared_ptr<const MI::Instance> errorDetails)
+    const std::string& bookmark, const std::string& machineID, bool moreResults, MI_Result resultCode,
+    const std::string& errorString, std::shared_ptr<const MI::Instance> errorDetails)
 {
     if (m_indicationResult)
     {

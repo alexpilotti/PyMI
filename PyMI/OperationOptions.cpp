@@ -101,13 +101,13 @@ static PyObject* OperationOptions_SetTimeout(OperationOptions* self, PyObject* t
 
 static PyObject* OperationOptions_SetCustomOption(OperationOptions* self,  PyObject *args, PyObject *kwds)
 {
-    wchar_t* optionName = NULL;
+    MI_Char* optionName = NULL;
     unsigned int optionValueType = 0;
     PyObject* optionValue = NULL;
     PyObject* mustComply = NULL;
 
     static char *kwlist[] = { "name", "value_type", "value", "must_comply", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "uIO|O", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "sIO|O", kwlist,
                                      &optionName, &optionValueType,
                                      &optionValue, &mustComply))
         return NULL;

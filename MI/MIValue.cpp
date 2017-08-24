@@ -55,20 +55,16 @@ void MIValue::CopyString(const std::string& value)
 {
     int len = (int)(value.length() + 1);
     m_value.string = new MI_Char[len];
-    if (::MultiByteToWideChar(CP_ACP, 0, value.c_str(), len, m_value.string, len) != len)
-    {
-        delete[] m_value.string;
-        throw Exception(L"MultiByteToWideChar failed");
-    }
+    memcpy_s(m_value.string, len * sizeof(MI_Char), value.c_str(), len * sizeof(MI_Char));
 }
-
+/*
 void MIValue::CopyWString(const std::wstring& value)
 {
     auto len = value.length() + 1;
     m_value.string = new MI_Char[len];
     memcpy_s(m_value.string, len * sizeof(MI_Char), value.c_str(), len * sizeof(MI_Char));
 }
-
+*/
 void MIValue::Delete(MI_Value& value, MI_Type type)
 {
     if (type & MI_ARRAY)
@@ -99,17 +95,17 @@ void MIValue::SetArrayItem(const MIValue& value, MI_Uint32 index)
 {
     if (!(m_type & MI_ARRAY))
     {
-        throw new Exception(L"Not an array");
+        throw new Exception("Not an array");
     }
 
     if (value.m_type != (m_type ^ MI_ARRAY))
     {
-        throw new Exception(L"The item's MI type must match the array's item type");
+        throw new Exception("The item's MI type must match the array's item type");
     }
 
     if (index >= m_value.uint8a.size)
     {
-        throw new Exception(L"Array index out of range");
+        throw new Exception("Array index out of range");
     }
 
     unsigned itemSize = this->GetItemSize(value.m_type);
@@ -118,13 +114,13 @@ void MIValue::SetArrayItem(const MIValue& value, MI_Uint32 index)
         MI_Char* strDest = nullptr;
         if (value.m_value.string)
         {
-            auto len = lstrlen(value.m_value.string) + 1;
+            auto len = strlen(value.m_value.string) + 1;
             strDest = new MI_Char[len];
             memcpy_s(strDest, len * sizeof(MI_Char), value.m_value.string, len * sizeof(MI_Char));
         }
         else
         {
-            throw Exception(L"Array item cannot be NULL");
+            throw Exception("Array item cannot be NULL");
         }
         memcpy_s(&m_value.uint8a.data[index * itemSize], itemSize, &strDest, itemSize);
     }
@@ -218,6 +214,7 @@ std::shared_ptr<MIValue> MIValue::FromString(const std::string& value)
     return self;
 }
 
+/*
 std::shared_ptr<MIValue> MIValue::FromString(const std::wstring& value)
 {
     auto self = std::make_shared<MIValue>(MI_STRING);
@@ -225,6 +222,7 @@ std::shared_ptr<MIValue> MIValue::FromString(const std::wstring& value)
     self->m_flags = 0;
     return self;
 }
+*/
 
 MIValue::MIValue(MI_Type type) : m_type(type)
 {

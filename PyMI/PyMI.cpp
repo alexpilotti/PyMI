@@ -146,46 +146,46 @@ PyObject* _initmi(void)
     PyObject_SetAttrString(m, "MI_ARRAY", PyLong_FromLong(MI_ARRAY));
 
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_DEFAULT",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_DEFAULT,
-                                                  wcslen(MI_AUTH_TYPE_DEFAULT)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_DEFAULT,
+                                                       strlen(MI_AUTH_TYPE_DEFAULT)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_NONE",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_NONE,
-                                                  wcslen(MI_AUTH_TYPE_NONE)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_NONE,
+                                                       strlen(MI_AUTH_TYPE_NONE)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_DIGEST",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_DIGEST,
-                                                  wcslen(MI_AUTH_TYPE_DIGEST)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_DIGEST,
+                                                       strlen(MI_AUTH_TYPE_DIGEST)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_NEGO_WITH_CREDS",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_NEGO_WITH_CREDS,
-                                                  wcslen(MI_AUTH_TYPE_NEGO_WITH_CREDS)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_NEGO_WITH_CREDS,
+                                                       strlen(MI_AUTH_TYPE_NEGO_WITH_CREDS)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_NEGO_NO_CREDS",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_NEGO_NO_CREDS,
-                                                  wcslen(MI_AUTH_TYPE_NEGO_NO_CREDS)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_NEGO_NO_CREDS,
+                                                       strlen(MI_AUTH_TYPE_NEGO_NO_CREDS)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_BASIC",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_BASIC,
-                                                  wcslen(MI_AUTH_TYPE_BASIC)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_BASIC,
+                                                       strlen(MI_AUTH_TYPE_BASIC)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_KERBEROS",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_KERBEROS,
-                                                  wcslen(MI_AUTH_TYPE_KERBEROS)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_KERBEROS,
+                                                       strlen(MI_AUTH_TYPE_KERBEROS)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_CLIENT_CERTS",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_CLIENT_CERTS,
-                                                  wcslen(MI_AUTH_TYPE_CLIENT_CERTS)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_CLIENT_CERTS,
+                                                       strlen(MI_AUTH_TYPE_CLIENT_CERTS)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_NTLM",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_NTLM,
-                                                  wcslen(MI_AUTH_TYPE_NTLM)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_NTLM,
+                                                       strlen(MI_AUTH_TYPE_NTLM)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_CREDSSP",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_CREDSSP,
-                                                  wcslen(MI_AUTH_TYPE_CREDSSP)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_CREDSSP,
+                                                       strlen(MI_AUTH_TYPE_CREDSSP)));
     PyObject_SetAttrString(m, "MI_AUTH_TYPE_ISSUER_CERT",
-                           PyUnicode_FromWideChar(MI_AUTH_TYPE_ISSUER_CERT,
-                                                  wcslen(MI_AUTH_TYPE_ISSUER_CERT)));
+                           PyUnicode_FromStringAndSize(MI_AUTH_TYPE_ISSUER_CERT,
+                                                       strlen(MI_AUTH_TYPE_ISSUER_CERT)));
 
     PyObject_SetAttrString(m, "MI_TRANSPORT_HTTP",
-                           PyUnicode_FromWideChar(MI_DESTINATIONOPTIONS_TRANSPORT_HTTP,
-                                                  wcslen(MI_DESTINATIONOPTIONS_TRANSPORT_HTTP)));
+                           PyUnicode_FromStringAndSize(MI_DESTINATIONOPTIONS_TRANSPORT_HTTP,
+                                                       strlen(MI_DESTINATIONOPTIONS_TRANSPORT_HTTP)));
     // The misspelling of 'transport' is intentional, as this is how it's defined by MI.h.
     PyObject_SetAttrString(m, "MI_TRANSPORT_HTTPS",
-                           PyUnicode_FromWideChar(MI_DESTINATIONOPTIONS_TRANPSORT_HTTPS,
-                                                  wcslen(MI_DESTINATIONOPTIONS_TRANPSORT_HTTPS)));
+                           PyUnicode_FromStringAndSize(MI_DESTINATIONOPTIONS_TRANPSORT_HTTPS,
+                                                       strlen(MI_DESTINATIONOPTIONS_TRANPSORT_HTTPS)));
 
     PyObject* mi_error = MiError_Init();
     if (mi_error == NULL)

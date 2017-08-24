@@ -31,7 +31,7 @@ static void Instance_dealloc(Instance* self)
 
 std::shared_ptr<MI::ValueElement> GetElement(Instance *self, PyObject *item)
 {
-    std::wstring name;
+    std::string name;
     Py_ssize_t i;
     GetIndexOrName(item, name, i);
 
@@ -69,7 +69,7 @@ static PyObject* Instance_GetElement(Instance *self, PyObject *item)
     {
         auto element = GetElement(self, item);
         PyObject* tuple = PyTuple_New(3);
-        PyTuple_SetItem(tuple, 0, PyUnicode_FromWideChar(element->m_name.c_str(), element->m_name.length()));
+        PyTuple_SetItem(tuple, 0, PyUnicode_FromStringAndSize(element->m_name.c_str(), element->m_name.length()));
 #ifdef IS_PY3K
         PyTuple_SetItem(tuple, 1, PyLong_FromLong(element->m_type));
 #else
@@ -106,7 +106,7 @@ static int Instance_ass_subscript(Instance* self, PyObject* item, PyObject* valu
 {
     try
     {
-        std::wstring name;
+        std::string name;
         Py_ssize_t i = 0;
         GetIndexOrName(item, name, i);
 
@@ -198,8 +198,8 @@ static PyObject* Instance_GetPath(Instance *self, PyObject*)
 {
     try
     {
-        std::wstring path = self->instance->GetPath();
-        return PyUnicode_FromWideChar(path.c_str(), path.length());
+        std::string path = self->instance->GetPath();
+        return PyUnicode_FromStringAndSize(path.c_str(), path.length());
     }
     catch (std::exception& ex)
     {
@@ -212,8 +212,8 @@ static PyObject* Instance_GetClassName(Instance *self, PyObject*)
 {
     try
     {
-        std::wstring& className = self->instance->GetClassName();
-        return PyUnicode_FromWideChar(className.c_str(), className.length());
+        std::string& className = self->instance->GetClassName();
+        return PyUnicode_FromStringAndSize(className.c_str(), className.length());
     }
     catch (std::exception& ex)
     {
@@ -226,8 +226,8 @@ static PyObject* Instance_GetNameSpace(Instance* self, PyObject*)
 {
     try
     {
-        std::wstring& nameSpace = self->instance->GetNameSpace();
-        return PyUnicode_FromWideChar(nameSpace.c_str(), nameSpace.length());
+        std::string& nameSpace = self->instance->GetNameSpace();
+        return PyUnicode_FromStringAndSize(nameSpace.c_str(), nameSpace.length());
     }
     catch (std::exception& ex)
     {
@@ -240,8 +240,8 @@ static PyObject* Instance_GetServerName(Instance* self, PyObject*)
 {
     try
     {
-        std::wstring& serverName = self->instance->GetServerName();
-        return PyUnicode_FromWideChar(serverName.c_str(), serverName.length());
+        std::string& serverName = self->instance->GetServerName();
+        return PyUnicode_FromStringAndSize(serverName.c_str(), serverName.length());
     }
     catch (std::exception& ex)
     {

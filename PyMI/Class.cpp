@@ -32,7 +32,7 @@ static PyObject* Class_subscript(Class *self, PyObject *item)
 {
     try
     {
-        std::wstring name;
+        std::string name;
         Py_ssize_t i;
         GetIndexOrName(item, name, i);
 
@@ -112,8 +112,8 @@ static PyObject* Class_GetClassName(Class* self, PyObject*)
 {
     try
     {
-        std::wstring& className = self->miClass->GetClassName();
-        return PyUnicode_FromWideChar(className.c_str(), className.length());
+        std::string& className = self->miClass->GetClassName();
+        return PyUnicode_FromStringAndSize(className.c_str(), className.length());
     }
     catch (std::exception& ex)
     {
@@ -126,8 +126,8 @@ static PyObject* Class_GetNameSpace(Class* self, PyObject*)
 {
     try
     {
-        std::wstring& nameSpace = self->miClass->GetNameSpace();
-        return PyUnicode_FromWideChar(nameSpace.c_str(), nameSpace.length());
+        std::string& nameSpace = self->miClass->GetNameSpace();
+        return PyUnicode_FromStringAndSize(nameSpace.c_str(), nameSpace.length());
     }
     catch (std::exception& ex)
     {
@@ -140,8 +140,8 @@ static PyObject* Class_GetServerName(Class* self, PyObject*)
 {
     try
     {
-        std::wstring& serverName = self->miClass->GetServerName();
-        return PyUnicode_FromWideChar(serverName.c_str(), serverName.length());
+        std::string& serverName = self->miClass->GetServerName();
+        return PyUnicode_FromStringAndSize(serverName.c_str(), serverName.length());
     }
     catch (std::exception& ex)
     {

@@ -8,6 +8,7 @@
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#define MI_CHAR_TYPE 1
 
 #include <windows.h>
 #include <MI.h>

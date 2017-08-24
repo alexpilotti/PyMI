@@ -84,7 +84,7 @@ void MIIntervalFromPyDelta(PyObject* pyDelta, MI_Interval& interval)
     int days = PyDateTime_DELTA_GET_DAYS(pyDelta);
     if (days < 0)
     {
-        throw MI::Exception(L"Negative datetime.timedelta intervals are not supported");
+        throw MI::Exception("Negative datetime.timedelta intervals are not supported");
     }
 
     interval.days = (MI_Uint32)days;
@@ -95,7 +95,7 @@ void MIIntervalFromPyDelta(PyObject* pyDelta, MI_Interval& interval)
     interval.microseconds = (MI_Uint32)PyDateTime_DELTA_GET_MICROSECONDS(pyDelta);
 }
 
-void GetIndexOrName(PyObject *item, std::wstring& name, Py_ssize_t& i)
+void GetIndexOrName(PyObject *item, std::string& name, Py_ssize_t& i)
 {
     name.clear();
     i = -1;
@@ -105,55 +105,40 @@ void GetIndexOrName(PyObject *item, std::wstring& name, Py_ssize_t& i)
     {
         char* s = PyString_AsString(item);
         DWORD len = lstrlenA(s) + 1;
-        wchar_t* w = new wchar_t[len];
-
-        if (::MultiByteToWideChar(CP_ACP, 0, s, len, w, len) != len)
-        {
-            delete [] w;
-            throw MI::Exception(L"MultiByteToWideChar failed");
-        }
-        name.assign(w, len);
-        delete[] w;
+        name.assign(s, len);
     }
     else
 #endif
     if (PyUnicode_Check(item))
     {
-        Py_ssize_t len = PyUnicode_GetSize(item) + 1;
-        wchar_t* w = new wchar_t[len];
-
-        if (PyUnicode_AsWideChar((PYUNICODEASVARCHARARG1TYPE*)item, w, len) < 0)
+        Py_ssize_t size = 0;
+        char* s = PyUnicode_AsUTF8AndSize(item, &size);
+        if(!s)
         {
-            delete[] w;
-            throw MI::Exception(L"PyUnicode_AsWideChar failed");
+            throw MI::Exception("GetIndexOrName failed");
         }
-        name.assign(w, len);
-        delete[] w;
+        name.assign(s, size);
     }
     else if (PyIndex_Check(item))
     {
         i = PyNumber_AsSsize_t(item, PyExc_IndexError);
         if (i == -1 && PyErr_Occurred())
-            throw MI::Exception(L"Index error");
+            throw MI::Exception("Index error");
     }
     else
-        throw MI::Exception(L"Invalid name or index");
+        throw MI::Exception("Invalid name or index");
 }
 
-std::wstring Py2WString(PyObject* pyValue)
+std::string Py2String(PyObject* pyValue)
 {
-    auto len = PyUnicode_GetSize(pyValue) + 1;
-    wchar_t* w = new wchar_t[len];
-
-    if (PyUnicode_AsWideChar((PYUNICODEASVARCHARARG1TYPE*)pyValue, w, len) < 0)
+    Py_ssize_t size = 0;
+    char* s = PyUnicode_AsUTF8AndSize(pyValue, &size);
+    if(!s)
     {
-        delete[] w;
-        throw MI::Exception(L"PyUnicode_AsWideChar failed");
+        throw MI::Exception("PyUnicode_AsWideChar failed");
     }
 
-    auto& value = std::wstring(w, len);
-    delete[] w;
-    return value;
+    return std::string(s, size);
 }
 
 std::shared_ptr<MI::MIValue> Py2StrMIValue(PyObject* pyValue)
@@ -161,13 +146,13 @@ std::shared_ptr<MI::MIValue> Py2StrMIValue(PyObject* pyValue)
     PyObject* pyStrValue = PyObject_CallMethod(pyValue, "__str__", NULL);
     if (!pyStrValue)
     {
-        throw MI::Exception(L"PyObject_CallMethod failed for __str__");
+        throw MI::Exception("PyObject_CallMethod failed for __str__");
     }
 
     try
     {
 #ifdef IS_PY3K
-        auto& value = Py2WString(pyStrValue);
+        auto& value = Py2String(pyStrValue);
 #else
         auto& value = std::string(PyString_AsString(pyStrValue));
 #endif
@@ -181,7 +166,7 @@ std::shared_ptr<MI::MIValue> Py2StrMIValue(PyObject* pyValue)
     }
 }
 
-std::shared_ptr<MI::MIValue> Str2PyLong2MI(char* strValue, MI_Type valueType)
+std::shared_ptr<MI::MIValue> Str2PyLong2MI(const char* strValue, MI_Type valueType)
 {
     auto obj = PyLong_FromString(strValue, NULL, 10);
     if (!obj)
@@ -308,7 +293,7 @@ std::shared_ptr<MI::MIValue> Py2MI(PyObject* pyValue, MI_Type valueType)
         switch (valueType)
         {
         case MI_STRING:
-            return MI::MIValue::FromString(Py2WString(pyValue));
+            return MI::MIValue::FromString(Py2String(pyValue));
         case MI_SINT8:
         case MI_UINT8:
         case MI_SINT16:
@@ -321,9 +306,8 @@ std::shared_ptr<MI::MIValue> Py2MI(PyObject* pyValue, MI_Type valueType)
         case MI_REAL32:
         case MI_REAL64:
         {
-            auto str = Py2WString(pyValue);
-            std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
-            return Str2PyLong2MI((char*)cv.to_bytes(str).c_str(), valueType);
+            auto str = Py2String(pyValue);
+            return Str2PyLong2MI(str.c_str(), valueType);
         }
         default:
             throw MI::TypeConversionException();
@@ -403,7 +387,7 @@ PyObject* MIArray2PyTuple(const MI_Value& value, MI_Type itemType)
         if (PyTuple_SetItem(pyObj, i, MI2Py(tmpVal, itemType, 0)))
         {
             Py_DECREF(pyObj);
-            throw MI::Exception(L"PyTuple_SetItem failed");
+            throw MI::Exception("PyTuple_SetItem failed");
         }
     }
     return pyObj;
@@ -460,7 +444,7 @@ PyObject* MI2Py(const MI_Value& value, MI_Type valueType, MI_Uint32 flags)
         }
         break;
     case MI_STRING:
-        return PyUnicode_FromWideChar(value.string, wcslen(value.string));
+        return PyUnicode_FromString(value.string);
     case MI_INSTANCE:
         return (PyObject*)Instance_New(std::make_shared<MI::Instance>(value.instance, false));
     case MI_REFERENCE:
@@ -503,8 +487,8 @@ void SetPyException(const std::exception& ex)
     }
 }
 
-void ValidatePyObjectType(PyObject* obj, const std::wstring& objName,
-                          PyTypeObject* expectedType, const std::wstring& expectedTypeName,
+void ValidatePyObjectType(PyObject* obj, const std::string& objName,
+                          PyTypeObject* expectedType, const std::string& expectedTypeName,
                           bool allowNone)
 {
     bool isNone = CheckPyNone(obj);
@@ -513,5 +497,5 @@ void ValidatePyObjectType(PyObject* obj, const std::wstring& objName,
         (!isNone && !PyObject_IsInstance(obj,
                                          reinterpret_cast<PyObject*>(expectedType))))
         throw MI::TypeConversionException(
-            L"\"" + objName + L"\"must have type " + expectedTypeName);
+            "\"" + objName + "\"must have type " + expectedTypeName);
 }

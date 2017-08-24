@@ -59,7 +59,7 @@ static PyObject* DestinationOptions_GetUILocale(DestinationOptions* self)
 {
     try
     {
-        std::wstring locale;
+        std::string locale;
         AllowThreads(&self->cs, [&]() {
             locale = self->destinationOptions->GetUILocale();
         });
@@ -75,9 +75,9 @@ static PyObject* DestinationOptions_GetUILocale(DestinationOptions* self)
 
 static PyObject* DestinationOptions_SetUILocale(DestinationOptions* self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* locale = NULL;
+    MI_Char* locale = NULL;
     static char *kwlist[] = { "locale_name", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "u", kwlist, &locale))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "s", kwlist, &locale))
         return NULL;
 
     try
@@ -139,9 +139,9 @@ static PyObject* DestinationOptions_SetTimeout(DestinationOptions* self, PyObjec
 
 static PyObject* DestinationOptions_SetTransport(DestinationOptions* self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* transport = NULL;
+    MI_Char* transport = NULL;
     static char *kwlist[] = { "transport", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "u", kwlist, &transport))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "s", kwlist, &transport))
         return NULL;
 
     try
@@ -162,7 +162,7 @@ static PyObject* DestinationOptions_GetTransport(DestinationOptions* self)
 {
     try
     {
-        std::wstring transport;
+        std::string transport;
         AllowThreads(&self->cs, [&]() {
             transport = self->destinationOptions->GetTransport();
         });
@@ -178,20 +178,20 @@ static PyObject* DestinationOptions_GetTransport(DestinationOptions* self)
 
 static PyObject* DestinationOptions_AddCredentials(DestinationOptions* self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* authType = NULL;
-    wchar_t* domain = NULL;
-    wchar_t* username = NULL;
-    wchar_t* password = NULL;
-    wchar_t* certThumbprint = NULL;
+    MI_Char* authType = NULL;
+    MI_Char* domain = NULL;
+    MI_Char* username = NULL;
+    MI_Char* password = NULL;
+    MI_Char* certThumbprint = NULL;
 
     static char *kwlist[] = { "auth_type", "domain", "username", "password", "cert_thumbprint", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "u|uuuu", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "s|ssss", kwlist,
                                      &authType, &domain, &username, &password, &certThumbprint))
         return NULL;
 
     try
     {
-        if (certThumbprint && wcslen(certThumbprint))
+        if (certThumbprint && strlen(certThumbprint))
             AllowThreads(&self->cs, [&]() {
                 self->destinationOptions->AddCredentials(authType, certThumbprint);
             });

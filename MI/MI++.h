@@ -25,28 +25,28 @@ namespace MI
         {
             return true;
         }
-        virtual void WriteMessage(std::shared_ptr<Operation> operation, unsigned channel, const std::wstring& message)
+        virtual void WriteMessage(std::shared_ptr<Operation> operation, unsigned channel, const std::string& message)
         {
         }
-        virtual void WriteProgress(std::shared_ptr<Operation> operation, const std::wstring& activity,
-            const std::wstring& currentOperation, const std::wstring& statusDescription, unsigned percentageComplete,
+        virtual void WriteProgress(std::shared_ptr<Operation> operation, const std::string& activity,
+            const std::string& currentOperation, const std::string& statusDescription, unsigned percentageComplete,
             unsigned secondsRemaining)
         {
         }
         virtual void ClassResult(std::shared_ptr<Operation> operation, std::shared_ptr<const Class> miClass, bool moreResults,
-            MI_Result resultCode, const std::wstring& errorString, std::shared_ptr<const Instance> errorDetails)
+            MI_Result resultCode, const std::string& errorString, std::shared_ptr<const Instance> errorDetails)
         {
         }
         virtual void InstanceResult(std::shared_ptr<Operation> operation, std::shared_ptr<const Instance> instance, bool moreResults,
-            MI_Result resultCode, const std::wstring& errorString, std::shared_ptr<const Instance> errorDetails)
+            MI_Result resultCode, const std::string& errorString, std::shared_ptr<const Instance> errorDetails)
         {
         }
         virtual void IndicationResult(std::shared_ptr<Operation> operation, std::shared_ptr<const Instance> instance,
-            const std::wstring& bookmark, const std::wstring& machineID, bool moreResults, MI_Result resultCode,
-            const std::wstring& errorString, std::shared_ptr<const Instance> errorDetails)
+            const std::string& bookmark, const std::string& machineID, bool moreResults, MI_Result resultCode,
+            const std::string& errorString, std::shared_ptr<const Instance> errorDetails)
         {
         }
-        virtual void StreamedParameterResult(std::shared_ptr<Operation> operation, const std::wstring& parameterName,
+        virtual void StreamedParameterResult(std::shared_ptr<Operation> operation, const std::string& parameterName,
             MI_Type resultType, const MI_Value& result)
         {
         }
@@ -64,14 +64,14 @@ namespace MI
         friend class Session;
 
     public:
-        Application(const std::wstring& appId = L"");
+        Application(const std::string& appId = "");
         void Close();
         bool IsClosed();
         virtual ~Application();
-        std::shared_ptr<Instance> NewInstance(const std::wstring& className);
-        std::shared_ptr<Instance> NewMethodParamsInstance(const Class& miClass, const std::wstring& methodName);
-        std::shared_ptr<Instance> NewInstanceFromClass(const std::wstring& className, const Class& miClass);
-        std::shared_ptr<Session> NewSession(const std::wstring& protocol = L"", const std::wstring& computerName = L".",
+        std::shared_ptr<Instance> NewInstance(const std::string& className);
+        std::shared_ptr<Instance> NewMethodParamsInstance(const Class& miClass, const std::string& methodName);
+        std::shared_ptr<Instance> NewInstanceFromClass(const std::string& className, const Class& miClass);
+        std::shared_ptr<Session> NewSession(const std::string& protocol = "", const std::string& computerName = ".",
             std::shared_ptr<DestinationOptions> destinationOptions = nullptr);
         std::shared_ptr<OperationOptions> NewOperationOptions();
         std::shared_ptr<DestinationOptions> NewDestinationOptions();
@@ -92,7 +92,7 @@ namespace MI
         std::shared_ptr<OperationOptions> Clone() const;
         void SetTimeout(const MI_Interval& timeout);
         MI_Interval GetTimeout();
-        void SetCustomOption(const std::wstring& optionName,
+        void SetCustomOption(const std::string& optionName,
                              MI_Type optionValueType,
                              const MIValue& optionValue,
                              MI_Boolean mustComply);
@@ -113,14 +113,14 @@ namespace MI
         std::shared_ptr<DestinationOptions> Clone() const;
         void SetTimeout(const MI_Interval& timeout);
         MI_Interval GetTimeout();
-        void SetUILocale(const std::wstring& locale);
-        std::wstring GetUILocale();
-        void SetTransport(const std::wstring& transport);
-        std::wstring GetTransport();
-        void AddCredentials(const std::wstring& authType,
-                            const std::wstring& certThumbprint);
-        void AddCredentials(const std::wstring& authType, const std::wstring& domain,
-                            const std::wstring& username, const std::wstring& password);
+        void SetUILocale(const std::string& locale);
+        std::string GetUILocale();
+        void SetTransport(const std::string& transport);
+        std::string GetTransport();
+        void AddCredentials(const std::string& authType,
+                            const std::string& certThumbprint);
+        void AddCredentials(const std::string& authType, const std::string& domain,
+                            const std::string& username, const std::string& password);
         void Delete();
         virtual ~DestinationOptions();
     };
@@ -135,29 +135,29 @@ namespace MI
         friend Application;
 
     public:
-        std::shared_ptr<Operation> ExecQuery(const std::wstring& ns, const std::wstring& query,
-                                             const std::wstring& dialect = L"WQL",
+        std::shared_ptr<Operation> ExecQuery(const std::string& ns, const std::string& query,
+                                             const std::string& dialect = "WQL",
                                              std::shared_ptr<OperationOptions> operationOptions = nullptr);
         std::shared_ptr<Operation> InvokeMethod(
-            Instance& instance, const std::wstring& methodName, std::shared_ptr<const Instance> inboundParams,
+            Instance& instance, const std::string& methodName, std::shared_ptr<const Instance> inboundParams,
             std::shared_ptr<OperationOptions> operationOptions = nullptr);
         std::shared_ptr<Operation> InvokeMethod(
-            const std::wstring& ns, const std::wstring& className, const std::wstring& methodName, std::shared_ptr<const Instance>,
+            const std::string& ns, const std::string& className, const std::string& methodName, std::shared_ptr<const Instance>,
             std::shared_ptr<OperationOptions> operationOptions = nullptr);
-        void CreateInstance(const std::wstring& ns, const Instance& instance,
+        void CreateInstance(const std::string& ns, const Instance& instance,
             std::shared_ptr<OperationOptions> operationOptions = nullptr);
-        void ModifyInstance(const std::wstring& ns, const Instance& instance,
+        void ModifyInstance(const std::string& ns, const Instance& instance,
             std::shared_ptr<OperationOptions> operationOptions = nullptr);
-        void DeleteInstance(const std::wstring& ns, const Instance& instance,
+        void DeleteInstance(const std::string& ns, const Instance& instance,
                             std::shared_ptr<OperationOptions> operationOptions = nullptr);
-        std::shared_ptr<Operation> GetClass(const std::wstring& ns, const std::wstring& className);
-        std::shared_ptr<Operation> GetInstance(const std::wstring& ns, const Instance& keyInstance);
-        std::shared_ptr<Operation> GetAssociators(const std::wstring& ns, const Instance& instance, const std::wstring& assocClass = L"",
-            const std::wstring& resultClass = L"", const std::wstring& role = L"",
-            const std::wstring& resultRole = L"", bool keysOnly = false,
+        std::shared_ptr<Operation> GetClass(const std::string& ns, const std::string& className);
+        std::shared_ptr<Operation> GetInstance(const std::string& ns, const Instance& keyInstance);
+        std::shared_ptr<Operation> GetAssociators(const std::string& ns, const Instance& instance, const std::string& assocClass = "",
+            const std::string& resultClass = "", const std::string& role = "",
+            const std::string& resultRole = "", bool keysOnly = false,
             std::shared_ptr<OperationOptions> operationOptions = nullptr);
-        std::shared_ptr<Operation> Subscribe(const std::wstring& ns, const std::wstring& query, std::shared_ptr<Callbacks> callback = nullptr,
-            std::shared_ptr<OperationOptions> operationOptions = nullptr, const std::wstring& dialect = L"WQL");
+        std::shared_ptr<Operation> Subscribe(const std::string& ns, const std::string& query, std::shared_ptr<Callbacks> callback = nullptr,
+            std::shared_ptr<OperationOptions> operationOptions = nullptr, const std::string& dialect = "WQL");
         void Close();
         bool IsClosed();
         virtual ~Session();
@@ -166,7 +166,7 @@ namespace MI
     struct Qualifier
     {
     public:
-        std::wstring m_name;
+        std::string m_name;
         MI_Type m_type;
         MI_Value m_value;
         MI_Uint32 m_flags;
@@ -175,7 +175,7 @@ namespace MI
     struct BaseElementInfo
     {
     public:
-        std::wstring m_name;
+        std::string m_name;
         unsigned m_index;
         MI_Type m_type;
     };
@@ -183,16 +183,16 @@ namespace MI
     struct ParameterInfo : public BaseElementInfo
     {
     public:
-        std::map<std::wstring, std::shared_ptr<Qualifier>> m_qualifiers;
+        std::map<std::string, std::shared_ptr<Qualifier>> m_qualifiers;
     };
 
     struct MethodInfo
     {
     public:
-        std::wstring m_name;
+        std::string m_name;
         unsigned m_index;
-        std::map<std::wstring, std::shared_ptr<Qualifier>> m_qualifiers;
-        std::map<std::wstring, std::shared_ptr<ParameterInfo>> m_parameters;
+        std::map<std::string, std::shared_ptr<Qualifier>> m_qualifiers;
+        std::map<std::string, std::shared_ptr<ParameterInfo>> m_parameters;
     };
 
     struct BaseElementInfoWithFlags : public BaseElementInfo
@@ -211,7 +211,7 @@ namespace MI
     {
     public:
         MI_Boolean m_valueExists;
-        std::map<std::wstring, std::shared_ptr<Qualifier>> m_qualifiers;
+        std::map<std::string, std::shared_ptr<Qualifier>> m_qualifiers;
     };
 
     class ScopedItem;
@@ -238,7 +238,7 @@ namespace MI
     private:
         MI_Class* m_class = nullptr;
         bool m_ownsInstance = false;
-        std::shared_ptr<std::vector<std::wstring>> m_key = nullptr;
+        std::shared_ptr<std::vector<std::string>> m_key = nullptr;
 
         Class(const Class &obj) : ScopedItem(nullptr) {} // Use Clone
 
@@ -251,16 +251,16 @@ namespace MI
         Class(MI_Class* miClass, bool ownsInstance, ScopeContextOwner* scopeOwner = nullptr) :
             m_class(miClass), m_ownsInstance(ownsInstance), ScopedItem(scopeOwner) {}
         unsigned GetElementsCount() const;
-        std::shared_ptr<const std::vector<std::wstring>> GetKey();
-        std::shared_ptr<ClassElement> operator[] (const std::wstring& name) const;
+        std::shared_ptr<const std::vector<std::string>> GetKey();
+        std::shared_ptr<ClassElement> operator[] (const std::string& name) const;
         std::shared_ptr<ClassElement> operator[] (unsigned index) const;
         unsigned GetMethodCount() const;
-        std::shared_ptr<MethodInfo> GetMethodInfo(const std::wstring& name) const;
+        std::shared_ptr<MethodInfo> GetMethodInfo(const std::string& name) const;
         std::shared_ptr<MethodInfo> GetMethodInfo(unsigned index) const;
-        std::wstring GetClassName() const;
-        std::wstring GetNameSpace() const;
-        std::wstring GetServerName() const;
-        std::wstring GetParentClassName() const;
+        std::string GetClassName() const;
+        std::string GetNameSpace() const;
+        std::string GetServerName() const;
+        std::string GetParentClassName() const;
         std::shared_ptr<Class> GetParentClass() const;
         std::shared_ptr<Class> Clone() const;
         void SetOutOfScope();
@@ -273,10 +273,10 @@ namespace MI
     private:
         MI_Instance* m_instance = nullptr;
         bool m_ownsInstance = false;
-        std::shared_ptr<const std::vector<std::wstring>> m_keyElementNames = nullptr;
+        std::shared_ptr<const std::vector<std::string>> m_keyElementNames = nullptr;
 
         Instance(const Instance &obj) : ScopedItem(nullptr) {} // Use Clone
-        const std::vector<std::wstring>& GetKeyElementNames();
+        const std::vector<std::string>& GetKeyElementNames();
 
         friend Application;
         friend Operation;
@@ -289,19 +289,19 @@ namespace MI
         MI_Instance* GetMIObject() { return this->m_instance; }
         std::shared_ptr<Instance> Clone() const;
         std::shared_ptr<Class> GetClass() const;
-        std::wstring GetClassName() const;
-        std::wstring GetNameSpace() const;
-        std::wstring GetServerName() const;
+        std::string GetClassName() const;
+        std::string GetNameSpace() const;
+        std::string GetServerName() const;
         unsigned GetElementsCount() const;
-        std::wstring GetPath();
-        std::shared_ptr<ValueElement> operator[] (const std::wstring& name) const;
+        std::string GetPath();
+        std::shared_ptr<ValueElement> operator[] (const std::string& name) const;
         std::shared_ptr<ValueElement> operator[] (unsigned index) const;
-        void AddElement(const std::wstring& name, const MIValue& value);
-        void SetElement(const std::wstring& name, const MIValue& value);
+        void AddElement(const std::string& name, const MIValue& value);
+        void SetElement(const std::string& name, const MIValue& value);
         void SetElement(unsigned index, const MIValue& value);
-        MI_Type GetElementType(const std::wstring& name) const;
+        MI_Type GetElementType(const std::string& name) const;
         MI_Type GetElementType(unsigned index) const;
-        void ClearElement(const std::wstring& name);
+        void ClearElement(const std::string& name);
         void ClearElement(unsigned index);
         void SetOutOfScope();
         void Delete();
@@ -344,8 +344,8 @@ namespace MI
         friend Application;
 
     public:
-        std::wstring SerializeInstance(const Instance& instance, bool includeClass=false);
-        std::wstring SerializeClass(const Class& miClass, bool deep=false);
+        std::string SerializeInstance(const Instance& instance, bool includeClass=false);
+        std::string SerializeClass(const Class& miClass, bool deep=false);
         void Close();
         bool IsClosed();
         virtual ~Serializer();

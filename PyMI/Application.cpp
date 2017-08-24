@@ -19,9 +19,9 @@ static PyObject* Application_new(PyTypeObject *type, PyObject *args, PyObject *k
 
 static int Application_init(Application *self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* appId = L"";
+    MI_Char* appId = MI_T("");
     static char *kwlist[] = { "app_id", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|u", kwlist, &appId))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|s", kwlist, &appId))
         return -1;
 
     try
@@ -40,19 +40,19 @@ static int Application_init(Application *self, PyObject *args, PyObject *kwds)
 
 static PyObject* Application_NewSession(Application *self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* protocol = L"";
-    wchar_t* computerName = L".";
+    MI_Char* protocol = "";
+    MI_Char* computerName = ".";
     PyObject* destinationOptions = NULL;
 
     static char *kwlist[] = { "protocol", "computer_name", "destination_options", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|uuO", kwlist, &protocol, &computerName, &destinationOptions))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ssO", kwlist, &protocol, &computerName, &destinationOptions))
         return NULL;
 
     try
     {
         if (!CheckPyNone(destinationOptions) && !PyObject_IsInstance(destinationOptions, reinterpret_cast<PyObject*>(&DestinationOptionsType)))
         {
-            throw MI::TypeConversionException(L"\"destination_options\" must have type DestinationOptions");
+            throw MI::TypeConversionException("\"destination_options\" must have type DestinationOptions");
         }
 
         std::shared_ptr<MI::Session> session;
@@ -84,16 +84,16 @@ static void Application_dealloc(Application* self)
 static PyObject* Application_NewMethodInboundParameters(Application *self, PyObject *args, PyObject *kwds)
 {
     PyObject* pyClass = NULL;
-    wchar_t* methodName = NULL;
+    MI_Char* methodName = NULL;
 
     static char *kwlist[] = { "mi_class", "method_name", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "Ou", kwlist, &pyClass, &methodName))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "Os", kwlist, &pyClass, &methodName))
         return NULL;
 
     try
     {
         if (!PyObject_IsInstance(pyClass, reinterpret_cast<PyObject*>(&ClassType)))
-            throw MI::TypeConversionException(L"\"mi_class\" must have type Class");
+            throw MI::TypeConversionException("\"mi_class\" must have type Class");
 
         std::shared_ptr<MI::Instance> instance;
         AllowThreads(&self->cs, [&]() {
@@ -110,9 +110,9 @@ static PyObject* Application_NewMethodInboundParameters(Application *self, PyObj
 
 static PyObject* Application_NewInstance(Application *self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* className = NULL;
+    MI_Char* className = NULL;
     static char *kwlist[] = { "class_name", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "u", kwlist, &className))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "s", kwlist, &className))
         return NULL;
 
     try
@@ -132,16 +132,16 @@ static PyObject* Application_NewInstance(Application *self, PyObject *args, PyOb
 
 static PyObject* Application_NewInstanceFromClass(Application *self, PyObject *args, PyObject *kwds)
 {
-    wchar_t* className = NULL;
+    MI_Char* className = NULL;
     PyObject* miClass = NULL;
     static char *kwlist[] = { "class_name", "mi_class", NULL };
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "uO", kwlist, &className, &miClass))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO", kwlist, &className, &miClass))
         return NULL;
 
     try
     {
         if (!PyObject_IsInstance(miClass, reinterpret_cast<PyObject*>(&ClassType)))
-            throw MI::TypeConversionException(L"\"mi_class\" must have type Class");
+            throw MI::TypeConversionException("\"mi_class\" must have type Class");
 
         std::shared_ptr<MI::Instance> instance;
         AllowThreads(&self->cs, [&]() {
